@@ -1,0 +1,14 @@
+.about-page,
+.contact-page,
+.sell-page,
+.listings-page,
+.property-detail-page {
+  padding-top: 80px;
+  /* Offset fixed header */
+}
+
+.hero {
+  margin-top: -80px;
+  /* Pull hero up behind transparent header */
+  padding-top: 80px;
+}

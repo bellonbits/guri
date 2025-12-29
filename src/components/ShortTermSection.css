@@ -1,0 +1,131 @@
+.short-term-section {
+    padding: 100px 0;
+    background-color: #f3f4f6;
+    /* Gray 100 - More noticeable than Gray 50 */
+    position: relative;
+    overflow: hidden;
+}
+
+.short-term-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.short-term-text h2 {
+    font-size: 3rem;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    color: var(--black);
+    letter-spacing: -0.5px;
+}
+
+.short-term-text p {
+    font-size: 1.1rem;
+    color: var(--gray-600);
+    margin-bottom: 32px;
+    line-height: 1.6;
+    max-width: 480px;
+}
+
+.badge-new {
+    display: inline-block;
+    padding: 6px 12px;
+    background-color: #FF385C;
+    /* Airbnb Color-ish */
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+}
+
+.features-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 40px;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--gray-800);
+    font-weight: 500;
+}
+
+.feature svg {
+    color: #FF385C;
+}
+
+.btn-explore {
+    display: inline-block;
+    background-color: var(--black);
+    color: var(--white);
+    padding: 16px 32px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-explore:hover {
+    transform: translateY(-2px);
+    background-color: #333;
+}
+
+/* Visual Side - Abstract Cards */
+.short-term-visual {
+    position: relative;
+    height: 500px;
+}
+
+.visual-card {
+    position: absolute;
+    border-radius: 24px;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.card-1 {
+    width: 80%;
+    height: 90%;
+    right: 0;
+    top: 0;
+    background-image: url('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80');
+    /* Modern Apartment */
+    z-index: 1;
+}
+
+.card-2 {
+    width: 50%;
+    height: 50%;
+    left: 0;
+    bottom: 20px;
+    background-image: url('https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+    /* Cozy Room */
+    z-index: 2;
+    border: 8px solid var(--white);
+}
+
+@media (max-width: 900px) {
+    .short-term-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .short-term-text h2 {
+        font-size: 2.5rem;
+    }
+
+    .short-term-visual {
+        height: 400px;
+        order: -1;
+        /* Show image first on mobile? Or kept bottom? Let's keep bottom or visual order. */
+    }
+}

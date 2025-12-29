@@ -1,0 +1,22 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+.env
+
+# Node
+node_modules/
+npm-debug.log
+package-lock.json
+
+# OS
+.DS_Store
+
+# Editors
+.vscode/
+
+# DB / tools
+.dbeaver/
+
+# Logs
+*.log

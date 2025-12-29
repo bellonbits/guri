@@ -1,0 +1,176 @@
+/* Admin Users Page */
+.admin-users {
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* Users Stats */
+.users-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card-mini {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(99, 102, 241, 0.1);
+    color: #6366f1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.stat-icon.active {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+.stat-icon.agent {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+}
+
+.stat-icon.admin {
+    background: rgba(139, 92, 246, 0.1);
+    color: #8b5cf6;
+}
+
+.stat-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--white);
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #94a3b8;
+}
+
+/* User Cell */
+.user-cell {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.user-name {
+    font-weight: 600;
+    color: var(--white);
+}
+
+.user-email {
+    font-size: 0.8125rem;
+    color: #94a3b8;
+}
+
+/* Role Badges */
+.role-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.role-user {
+    background: rgba(99, 102, 241, 0.1);
+    color: #a5b4fc;
+}
+
+.role-agent {
+    background: rgba(245, 158, 11, 0.1);
+    color: #fcd34d;
+}
+
+.role-admin {
+    background: rgba(139, 92, 246, 0.1);
+    color: #c4b5fd;
+}
+
+/* Status Badges */
+.status-active {
+    background: rgba(16, 185, 129, 0.1);
+    color: #6ee7b7;
+}
+
+.status-suspended {
+    background: rgba(245, 158, 11, 0.1);
+    color: #fcd34d;
+}
+
+.status-banned {
+    background: rgba(239, 68, 68, 0.1);
+    color: #fca5a5;
+}
+
+/* Other Cells */
+.phone-cell {
+    color: #94a3b8;
+    font-size: 0.875rem;
+}
+
+.stat-cell {
+    font-weight: 600;
+    color: var(--white);
+}
+
+.date-cell {
+    color: #94a3b8;
+    font-size: 0.875rem;
+}
+
+/* Action Buttons */
+.action-btn.mail:hover {
+    border-color: #3b82f6;
+    color: #3b82f6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .users-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+}

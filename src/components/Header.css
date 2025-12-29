@@ -1,0 +1,347 @@
+/* Base Header Styles */
+/* Base Header Styles - Default for Inner Pages (Frosted White) */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    z-index: 1000;
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+    /* Default: Frosted Glass White (Visible on all backgrounds) */
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Homepage Only: Transparent (No Glass) for Hero Image */
+.header.is-home:not(.scrolled) {
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-bottom: none;
+    box-shadow: none;
+}
+
+.header.scrolled {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    height: 72px;
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+/* Logo */
+.logo {
+    flex-shrink: 0;
+    z-index: 1001;
+}
+
+.logo img {
+    height: 40px;
+    width: auto;
+}
+
+/* Desktop Navigation - Centered */
+.nav-desktop {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.nav-list {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-link {
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 15px;
+    transition: color 0.2s ease;
+    /* Default: Black (for Frosted White header) */
+    color: var(--black);
+}
+
+/* Homepage Unscrolled: White Text */
+.header.is-home:not(.scrolled) .nav-link {
+    color: var(--white);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: currentColor;
+    transition: width 0.3s ease;
+    opacity: 0.8;
+}
+
+.nav-link:hover {
+    color: var(--primary);
+}
+
+/* Homepage Unscrolled Hover: White with Opacity */
+.header.is-home:not(.scrolled) .nav-link:hover {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Right Actions */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.phone-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    /* Default: Black */
+    color: var(--black);
+    transition: color 0.2s ease;
+}
+
+/* Homepage Unscrolled Phone: White */
+.header.is-home:not(.scrolled) .phone-link {
+    color: var(--white);
+}
+
+.phone-link:hover {
+    color: var(--primary);
+}
+
+.header.is-home:not(.scrolled) .phone-link:hover {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.header.scrolled .phone-link:hover {
+    color: var(--primary);
+}
+
+/* Request Visit Button */
+.btn-visit {
+    background-color: var(--primary);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.btn-visit:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+/* Mobile Toggle */
+.mobile-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    /* Default: Black */
+    color: var(--black);
+    padding: 4px;
+}
+
+/* Homepage Unscrolled Mobile Toggle: White */
+.header.is-home:not(.scrolled) .mobile-toggle {
+    color: var(--white);
+}
+
+.header.scrolled .mobile-toggle {
+    color: var(--black);
+}
+
+/* Mobile Menu Overlay */
+.mobile-menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 300px;
+    background: var(--white);
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+    padding: 100px 32px 32px;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    z-index: 999;
+}
+
+.mobile-menu.open {
+    transform: translateX(0);
+}
+
+.mobile-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.mobile-link {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--gray-800);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+/* Request Visit Button */
+.btn-visit {
+    background-color: var(--primary);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-visit:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+.user-btn {
+    max-width: 180px;
+}
+
+.user-btn span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Mobile Toggle */
+.mobile-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    /* Default: Black */
+    color: var(--black);
+    padding: 4px;
+}
+
+/* Homepage Unscrolled Mobile Toggle: White */
+.header.is-home:not(.scrolled) .mobile-toggle {
+    color: var(--white);
+}
+
+.header.scrolled .mobile-toggle {
+    color: var(--black);
+}
+
+/* Mobile Menu Overlay */
+.mobile-menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 300px;
+    background: var(--white);
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+    padding: 100px 32px 32px;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    z-index: 999;
+}
+
+.mobile-menu.open {
+    transform: translateX(0);
+}
+
+.mobile-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.mobile-link {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--gray-800);
+    text-decoration: none;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mobile-link:hover {
+    color: var(--primary);
+}
+
+.mobile-link.primary {
+    background: var(--primary);
+    color: var(--white);
+    padding: 12px 24px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.mobile-link.primary:hover {
+    background: var(--primary-dark);
+    color: var(--white);
+}
+
+.mobile-link.user-link {
+    background: var(--gray-100);
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.mobile-divider {
+    height: 1px;
+    background: var(--gray-200);
+    margin: 8px 0;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1024px) {
+
+    .nav-desktop,
+    .header-actions {
+        display: none;
+    }
+
+    .mobile-toggle {
+        display: block;
+        margin-left: auto;
+        /* Push to right */
+    }
+}

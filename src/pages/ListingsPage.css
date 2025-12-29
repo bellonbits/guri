@@ -1,0 +1,314 @@
+/* Filters */
+.listings-filters {
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-200);
+    padding: 1rem 0;
+    position: sticky;
+    top: 70px;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    /* Subtle float */
+}
+
+.filters-bar {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+/* Search Input - Pill Style */
+.search-input {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 12px 20px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 50px;
+    /* Full pill */
+    color: var(--gray-500);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    /* Slight lift */
+    transition: var(--transition);
+}
+
+.search-input:hover,
+.search-input:focus-within {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color: var(--gray-300);
+}
+
+.search-input input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 0.95rem;
+    color: var(--gray-800);
+    font-weight: 500;
+}
+
+.search-input svg {
+    color: var(--primary);
+}
+
+/* Select Inputs - Pill Style */
+.filter-group select {
+    padding: 12px 32px 12px 20px;
+    /* Extra right padding for arrow */
+    background-color: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 50px;
+    font-size: 0.95rem;
+    color: var(--gray-700);
+    cursor: pointer;
+    min-width: 160px;
+    appearance: none;
+    /* Hide default arrow to potentially add custom one, but standard is okay for now */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: var(--transition);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23222' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+}
+
+.filter-group select:hover {
+    border-color: var(--gray-400);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* View Toggle - Cleaner */
+.view-toggle {
+    display: flex;
+    background: var(--gray-100);
+    border-radius: 50px;
+    /* Pill container */
+    padding: 4px;
+    margin-left: auto;
+    /* Push to right */
+}
+
+.view-toggle button {
+    padding: 8px 12px;
+    background: transparent;
+    color: var(--gray-500);
+    border-radius: 50%;
+    /* Circle buttons inside */
+    transition: var(--transition);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.view-toggle button.active {
+    background: var(--white);
+    color: var(--black);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.listings-page {
+    padding-top: 0;
+}
+
+/* Hero */
+.listings-hero {
+    position: relative;
+    height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1920') center/cover;
+}
+
+.listings-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4));
+}
+
+.listings-hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: var(--white);
+}
+
+.listings-hero-content h1 {
+    font-size: 2.75rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    color: var(--white);
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.listings-hero-content p {
+    font-size: 1.15rem;
+    opacity: 1;
+    color: var(--white);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.results-info {
+    width: 100%;
+    margin-top: 0;
+    padding-top: 0.5rem;
+    color: var(--gray-500);
+    font-size: 0.9rem;
+    padding: 0 40px;
+    max-width: 1400px;
+    margin: 8px auto 0;
+}
+
+/* Listings Layout Refinements */
+.listings-content {
+    background: var(--white);
+    /* Cleaner on white sometimes, but let's stick to gray-50 for separation from filters */
+    background: var(--white);
+}
+
+.listings-content .container {
+    max-width: 1400px;
+    padding: 0 40px;
+}
+
+/* Content */
+.listings-content {
+    padding: 3rem 0 6rem;
+    background: var(--gray-50);
+    min-height: 50vh;
+}
+
+.listings-content .properties-grid {
+    display: grid;
+    gap: 24px;
+}
+
+.listings-content .properties-grid.grid {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.listings-content .properties-grid.list {
+    grid-template-columns: 1fr;
+}
+
+.listings-content .properties-grid.list .property-card {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 20px;
+    padding: 16px;
+    transition: var(--transition);
+}
+
+.listings-content .properties-grid.list .property-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-4px);
+    border-color: var(--primary);
+}
+
+.listings-content .properties-grid.list .property-image-container {
+    width: 320px;
+    height: 220px;
+    flex-shrink: 0;
+    margin-bottom: 0;
+    border-radius: 12px;
+}
+
+.listings-content .properties-grid.list .property-info {
+    flex: 1;
+    padding: 8px 0;
+    justify-content: space-between;
+}
+
+/* Adjust logic for small screens handled in media query below */
+
+.no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--gray-500);
+}
+
+.no-results svg {
+    color: var(--gray-300);
+    margin-bottom: 1.5rem;
+}
+
+.no-results h3 {
+    font-size: 1.5rem;
+    color: var(--gray-700);
+    margin-bottom: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .listings-content .properties-grid.grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 1024px) {
+    .filters-bar {
+        padding: 0 20px;
+    }
+
+    .view-toggle {
+        display: none;
+    }
+
+    .listings-content .properties-grid.grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .listings-hero {
+        height: 280px;
+    }
+
+    .listings-hero-content h1 {
+        font-size: 2rem;
+    }
+
+    .filters-bar {
+        flex-direction: column;
+    }
+
+    .search-input,
+    .filter-group select {
+        width: 100%;
+    }
+
+    .listings-content .properties-grid.grid,
+    .listings-content .properties-grid.list {
+        grid-template-columns: 1fr;
+    }
+
+    .listings-content .properties-grid.list .property-card {
+        flex-direction: column;
+        padding: 0;
+        gap: 0;
+        border: none;
+    }
+
+    .listings-content .properties-grid.list .property-image-container {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1 / 0.95;
+        margin-bottom: 12px;
+    }
+
+    .listings-content .properties-grid.list .property-info {
+        padding: 0 4px 12px;
+    }
+}

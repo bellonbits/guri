@@ -1,0 +1,507 @@
+/* Hero Section */
+.hero {
+    position: relative;
+    min-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0 1rem;
+    margin-top: -50px;
+    padding-top: 180px !important;
+    /* Force massive clearance: 350-80 = 270px visual space */
+    padding-bottom: 60px;
+}
+
+.hero h1 {
+    color: var(--white);
+    font-size: 4rem;
+    font-weight: 800;
+    margin-top: 5rem;
+    /* Additional push if padding acts up */
+    margin-bottom: 4rem;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    background: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1920') center/cover no-repeat;
+    z-index: -1;
+}
+
+/* Gradient Overlay - Smooth dark fade for text readability */
+.hero-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom,
+            rgba(0, 0, 0, 0.6) 0%,
+            rgba(0, 0, 0, 0.4) 50%,
+            rgba(0, 0, 0, 0.6) 100%);
+    backdrop-filter: blur(1px);
+}
+
+.hero-content {
+    text-align: center;
+    width: 100%;
+    max-width: 850px;
+    z-index: 10;
+}
+
+.hero h1 {
+    color: var(--white);
+    font-size: 4rem;
+    font-weight: 800;
+    margin-bottom: 4rem;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Tabs Above Search Bar (Separated Sibling) */
+.search-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 20;
+}
+
+.tab-btn {
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--white);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 12px 32px;
+    border-radius: 40px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    backdrop-filter: blur(12px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tab-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+}
+
+.tab-btn.active {
+    background: var(--white);
+    color: var(--black);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transform: scale(1.05);
+    border-color: var(--white);
+}
+
+/* Special "Buy" Theme */
+.tab-btn:first-child.active {
+    color: var(--primary);
+}
+
+/* Special "Rent" Theme */
+.tab-btn:last-child.active {
+    background: var(--black);
+    color: var(--white);
+    border-color: var(--black);
+}
+
+/* Search Bar Container */
+.search-container {
+    background: var(--white);
+    padding: 0;
+    border-radius: 40px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+    display: inline-block;
+    width: 100%;
+    max-width: 850px;
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background: var(--white);
+    border-radius: 40px;
+    height: 80px;
+}
+
+.search-input-group {
+    flex: 1;
+    padding: 0 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+    cursor: pointer;
+    height: 100%;
+    border-radius: 40px;
+    transition: background 0.2s;
+    position: relative;
+}
+
+.search-input-group:hover {
+    background: #ebebeb;
+    z-index: 2;
+}
+
+.search-input-group label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    color: var(--black);
+    margin-bottom: 2px;
+    display: block;
+}
+
+.search-input-group input,
+.search-input-group select {
+    border: none;
+    background: transparent;
+    width: 100%;
+    font-size: 0.9rem;
+    color: var(--gray-500);
+    outline: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.search-input-group input::placeholder {
+    color: var(--gray-400);
+}
+
+.category-pill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    min-width: 90px;
+    padding: 12px 16px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 16px;
+    color: var(--gray-800);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.category-pill:hover {
+    color: var(--black);
+    border-color: var(--primary);
+    background: var(--gray-50);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.category-pill.active {
+    background: var(--primary);
+    color: var(--white);
+    border-color: var(--primary);
+}
+
+.category-pill svg {
+    width: 28px;
+    height: 28px;
+    color: var(--primary);
+}
+
+.category-pill:hover svg {
+    transform: scale(1.1);
+}
+
+.category-pill.active svg {
+    color: var(--white);
+    transform: scale(1.1);
+}
+
+/* Vertical Divider */
+.divider {
+    width: 1px;
+    height: 32px;
+    background: var(--gray-200);
+}
+
+/* Search Button */
+.search-button-wrapper {
+    padding-right: 10px;
+}
+
+.search-circle-btn {
+    background: var(--primary);
+    color: var(--white);
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, background 0.2s;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(26, 95, 158, 0.4);
+}
+
+.search-circle-btn span {
+    display: none;
+}
+
+.search-circle-btn.with-text {
+    width: auto;
+    padding: 0 24px;
+    gap: 8px;
+}
+
+.search-circle-btn:hover {
+    background: var(--primary-dark);
+    transform: scale(1.05);
+}
+
+/* Featured Properties Section */
+.section-featured {
+    padding: 5rem 0;
+    background: var(--white);
+}
+
+.section-featured .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2.5rem;
+}
+
+.section-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gray-800);
+}
+
+/* Categories Section */
+.section-categories {
+    padding: 4rem 0;
+    background: var(--gray-50);
+}
+
+.section-categories .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.section-categories h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: var(--gray-800);
+}
+
+/* Horizontal Scrollable Container */
+.categories-scroll {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 16px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--gray-300) var(--gray-100);
+}
+
+.categories-scroll::-webkit-scrollbar {
+    height: 6px;
+}
+
+.categories-scroll::-webkit-scrollbar-track {
+    background: var(--gray-100);
+    border-radius: 10px;
+}
+
+.categories-scroll::-webkit-scrollbar-thumb {
+    background: var(--gray-300);
+    border-radius: 10px;
+}
+
+.categories-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--gray-400);
+}
+
+.view-all-link {
+    font-weight: 500;
+    text-decoration: underline;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.properties-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+/* Responsive Grid */
+@media (max-width: 1400px) {
+    .properties-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 1024px) {
+    .properties-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .section-featured .container,
+    .section-categories .container {
+        padding: 0 24px;
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .hero {
+        min-height: 85vh;
+        /* Increase height */
+        padding-top: 280px;
+        /* Significant breathing room */
+        padding-bottom: 60px;
+        justify-content: flex-start;
+        /* Stack from top down */
+    }
+
+    .hero h1 {
+        font-size: 1.75rem;
+        margin-bottom: 2rem;
+        /* Big gap between Title and Tabs */
+        line-height: 1.2;
+        padding: 0 10px;
+    }
+
+    /* Tabs separated from Title and Search */
+    .search-tabs {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto 1.5rem;
+        /* Gap between Tabs and Search Inputs */
+        padding: 4px;
+    }
+
+    .tab-btn {
+        padding: 10px 24px;
+        font-size: 0.95rem;
+        flex: 1;
+        text-align: center;
+    }
+
+    .search-container {
+        border-radius: 32px;
+        padding: 24px 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        margin-bottom: 2rem;
+        background: var(--white);
+    }
+
+    .search-bar {
+        flex-direction: column;
+        height: auto;
+        gap: 20px;
+        /* Space between Location, Type, Price */
+        background: transparent;
+    }
+
+    .search-input-group {
+        width: 100%;
+        padding: 12px 16px;
+        background: var(--gray-50);
+        /* Distinct inputs */
+        border: 1px solid transparent;
+        border-radius: 16px;
+        text-align: center;
+        align-items: center;
+    }
+
+    .search-input-group:hover,
+    .search-input-group:focus-within {
+        background: var(--white);
+        border-color: var(--primary);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .search-input-group label {
+        margin-bottom: 4px;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        color: var(--primary);
+    }
+
+    .search-input-group input,
+    .search-input-group select {
+        text-align: center;
+        font-size: 1rem;
+        color: var(--black);
+    }
+
+    .divider {
+        display: none;
+    }
+
+    .search-circle-btn {
+        width: 100%;
+        height: 56px;
+        border-radius: 28px;
+        margin-top: 8px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        box-shadow: 0 4px 16px rgba(var(--primary-rgb), 0.3);
+    }
+
+    .search-circle-btn span {
+        display: inline;
+        margin-left: 8px;
+    }
+
+    .search-button-wrapper {
+        padding: 0;
+        width: 100%;
+    }
+
+    .properties-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .section-featured,
+    .section-categories {
+        padding: 3rem 0;
+    }
+
+    .section-featured .container,
+    .section-categories .container {
+        padding: 0 20px;
+    }
+
+    /* Better Scroll Categories on Mobile */
+    .categories-scroll {
+        padding: 4px 20px 20px 20px;
+        margin: 0 -20px;
+        scroll-snap-type: x mandatory;
+    }
+
+    .category-pill {
+        min-width: 100px;
+        padding: 16px 10px;
+        scroll-snap-align: start;
+        flex-shrink: 0;
+    }
+}

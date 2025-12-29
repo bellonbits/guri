@@ -1,0 +1,186 @@
+.property-card {
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    text-decoration: none;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    /* Ensure content stays within radius */
+    height: 100%;
+}
+
+.property-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+/* Image Container */
+.property-image-container {
+    aspect-ratio: 4 / 3;
+    /* More standard landscape card ratio */
+    width: 100%;
+    border-radius: 0;
+    /* Let parent handle radius */
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 0;
+}
+
+.property-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.property-card:hover .property-image-container img {
+    transform: scale(1.05);
+    /* Subtle zoom */
+}
+
+/* Info Section */
+.property-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    /* More breathing room */
+    padding: 16px 20px 20px;
+    /* Internal padding */
+}
+
+.info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.location-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin: 0;
+    line-height: 1.3;
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.9rem;
+    color: var(--gray-800);
+    font-weight: 600;
+    background: var(--gray-100);
+    padding: 4px 8px;
+    border-radius: 8px;
+}
+
+.description-text {
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.5;
+    color: var(--gray-500);
+}
+
+/* Make the title (second description-text) stand out more */
+.property-info p:last-child {
+    color: var(--gray-700);
+    font-weight: 500;
+}
+
+.price-container {
+    margin-top: 12px;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    font-size: 1.15rem;
+}
+
+.price-amount {
+    font-weight: 800;
+    color: var(--primary);
+    /* Brand color for price */
+}
+
+.price-unit {
+    font-weight: 500;
+    color: var(--gray-500);
+    font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .property-image-container {
+        border-radius: 12px;
+
+
+    }
+}
+
+.info-header-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+}
+
+/* Ensure price container doesn't have extra margin in footer context */
+.card-footer .price-container {
+    margin-top: 0;
+}
+
+.card-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.icon-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--gray-200);
+    background: transparent;
+    color: var(--gray-600);
+    cursor: pointer;
+    transition: all 0.2s;
+    padding: 0;
+}
+
+.icon-btn:hover {
+    background: var(--gray-100);
+    color: var(--black);
+    border-color: var(--gray-400);
+    transform: translateY(-1px);
+}
+
+/* Details specific hover (optional) */
+.icon-btn[title="View Details"]:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+    background: var(--white);
+}
+
+.icon-btn.active-compare {
+    background: var(--success);
+    color: var(--white);
+    border-color: var(--success);
+}
+
+.icon-btn.active-compare:hover {
+    background: #059669;
+    /* Darker green */
+}

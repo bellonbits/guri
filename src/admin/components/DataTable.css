@@ -1,0 +1,131 @@
+/* Data Table */
+.data-table-container {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+/* Table Search */
+.table-search {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #334155;
+    background: #334155;
+}
+
+.table-search svg {
+    color: #94a3b8;
+    flex-shrink: 0;
+}
+
+.table-search input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--white);
+    font-size: 0.875rem;
+    outline: none;
+}
+
+.table-search input::placeholder {
+    color: #64748b;
+}
+
+/* Table Wrapper */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table thead {
+    background: #334155;
+    border-bottom: 1px solid #475569;
+}
+
+.data-table th {
+    padding: 1rem 1.5rem;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+.data-table th.sortable {
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+}
+
+.data-table th.sortable:hover {
+    background: #475569;
+}
+
+.th-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.data-table tbody tr {
+    border-bottom: 1px solid #334155;
+    transition: background 0.2s;
+}
+
+.data-table tbody tr:hover {
+    background: #334155;
+}
+
+.data-table tbody tr.clickable {
+    cursor: pointer;
+}
+
+.data-table td {
+    padding: 1rem 1.5rem;
+    color: #e2e8f0;
+    font-size: 0.875rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem 1.5rem !important;
+    color: #64748b;
+    font-style: italic;
+}
+
+/* Table Footer */
+.table-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #334155;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.table-count {
+    font-size: 0.875rem;
+    color: #94a3b8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+
+    .data-table th,
+    .data-table td {
+        padding: 0.75rem 1rem;
+        font-size: 0.8125rem;
+    }
+
+    .table-search {
+        padding: 0.875rem 1rem;
+    }
+}
