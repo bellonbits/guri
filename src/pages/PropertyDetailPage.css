@@ -362,14 +362,167 @@
     gap: 1.5rem;
 }
 
-/* Responsive */
+/* Booking Widget */
+.booking-widget {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 100px;
+}
+
+.booking-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.booking-price .amount {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--primary-dark);
+}
+
+.booking-price .unit {
+    color: var(--gray-500);
+    font-size: 1rem;
+}
+
+.booking-rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.booking-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.date-picker-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid var(--gray-300);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.date-input {
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--gray-300);
+}
+
+.date-input:last-child {
+    border-right: none;
+}
+
+.date-input label {
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: var(--gray-800);
+}
+
+.date-input input {
+    border: none;
+    padding: 4px 0;
+    font-size: 0.9rem;
+    color: var(--gray-600);
+    background: transparent;
+    outline: none;
+    cursor: pointer;
+}
+
+.guest-picker {
+    border: 1px solid var(--gray-300);
+    border-radius: 12px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.guest-picker label {
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: var(--gray-800);
+}
+
+.guest-picker select {
+    border: none;
+    padding: 4px 0;
+    font-size: 1rem;
+    background: transparent;
+    outline: none;
+    cursor: pointer;
+}
+
+.booking-btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 1.1rem;
+    background: linear-gradient(to right, #e61e4d 0%, #d70466 100%);
+    /* Airbnb Red */
+    color: var(--white);
+    border: none;
+    margin-top: 8px;
+    box-shadow: 0 4px 12px rgba(230, 30, 77, 0.3);
+}
+
+.booking-btn:hover {
+    background: linear-gradient(to right, #d70466 0%, #bd1e59 100%);
+    transform: translateY(-1px);
+}
+
+.no-charge-note {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--gray-500);
+    margin: 8px 0;
+}
+
+.price-breakdown {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+    color: var(--gray-700);
+}
+
+.price-row.total {
+    font-weight: 800;
+    font-size: 1.15rem;
+    color: var(--primary-dark);
+}
+
+.price-breakdown hr {
+    border: none;
+    border-top: 1px solid var(--gray-200);
+    margin: 4px 0;
+}
+
+/* Existing styles for responsiveness (if needed) */
 @media (max-width: 1024px) {
     .detail-grid {
         grid-template-columns: 1fr;
     }
 
-    .agent-card {
+    .agent-card,
+    .booking-widget {
         position: static;
+        max-width: 100%;
     }
 
     .similar-grid {

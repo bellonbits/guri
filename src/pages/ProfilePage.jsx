@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { User, Mail, Phone, MapPin, Edit2, Save, X, LogOut, Heart, Home, Calendar } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { getSavedProperties, getUserStats } from '../utils/api';
+import { propertyApi } from '../utils/propertyApi';
 import PropertyCard from '../components/PropertyCard';
 import './ProfilePage.css';
 
@@ -32,15 +33,19 @@ function ProfilePage() {
         bio: user?.bio || '',
     });
 
+    const [bookings, setBookings] = useState([]);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [properties, userStats] = await Promise.all([
+                const [properties, userStats, myBookings] = await Promise.all([
                     getSavedProperties(),
-                    getUserStats() // Import this
+                    getUserStats(),
+                    propertyApi.getMyBookings()
                 ]);
                 setSavedProperties(properties);
                 setStats(userStats);
+                setBookings(myBookings);
             } catch (err) {
                 console.error("Failed to fetch profile data", err);
             } finally {
@@ -312,6 +317,49 @@ function ProfilePage() {
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    {/* My Bookings */}
+                    <div className="profile-section">
+                        <h2>My Bookings</h2>
+                        {loadingSaved ? (
+                            <p>Loading bookings...</p>
+                        ) : bookings.length > 0 ? (
+                            <div className="bookings-list">
+                                {bookings.map(booking => (
+                                    <div key={booking.id} className="booking-card">
+                                        <div className="booking-info">
+                                            <div className="booking-header">
+                                                <h3>Booking #{booking.id.slice(0, 8)}</h3>
+                                                <span className={`booking-status ${booking.status.toLowerCase()}`}>{booking.status}</span>
+                                            </div>
+                                            <div className="booking-details">
+                                                <div className="detail-row">
+                                                    <Calendar size={16} />
+                                                    <span>{new Date(booking.check_in).toLocaleDateString()} - {new Date(booking.check_out).toLocaleDateString()}</span>
+                                                </div>
+                                                <div className="detail-row">
+                                                    <Home size={16} />
+                                                    <span>{booking.guest_count} Guest{booking.guest_count > 1 ? 's' : ''}</span>
+                                                </div>
+                                                <div className="detail-row price">
+                                                    <span>Total: </span>
+                                                    <strong>KSh {parseFloat(booking.total_price).toLocaleString()}</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="empty-state">
+                                <Calendar size={48} />
+                                <p>You haven't made any bookings yet</p>
+                                <button className="btn btn-primary" onClick={() => navigate('/stays')}>
+                                    Find a Stay
+                                </button>
+                            </div>
+                        )}
                     </div>
 
                     {/* Saved Properties */}

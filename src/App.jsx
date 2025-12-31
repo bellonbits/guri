@@ -18,6 +18,7 @@ import VerifyEmailPage from './pages/VerifyEmailPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import ProfilePage from './pages/ProfilePage';
+import StaysPage from './pages/StaysPage';
 import AdminLayout from './admin/layout/AdminLayout';
 import AdminRoute from './admin/components/AdminRoute';
 import AdminDashboard from './admin/pages/AdminDashboard';
@@ -27,6 +28,10 @@ import AdminAnalytics from './admin/pages/AdminAnalytics';
 import AdminMonitoring from './admin/pages/AdminMonitoring';
 import AdminSettings from './admin/pages/AdminSettings';
 import AdminPropertyForm from './admin/pages/AdminPropertyForm';
+import AgentLayout from './components/agent/AgentLayout';
+import AgentRoute from './components/agent/AgentRoute';
+import AgentDashboard from './pages/agent/AgentDashboard';
+import AgentListings from './pages/agent/AgentListings';
 import './index.css';
 import './App.css';
 
@@ -55,6 +60,7 @@ function App() {
             <Route path="/buy" element={<BuyPage />} />
             <Route path="/sell" element={<SellPage />} />
             <Route path="/rent" element={<RentPage />} />
+            <Route path="/stays" element={<StaysPage />} />
             <Route path="/listings" element={<ListingsPage />} />
             <Route path="/property/:slug" element={<PropertyDetailPage />} />
             <Route path="/compare" element={<ComparePage />} />
@@ -77,6 +83,22 @@ function App() {
               }
             />
           </Route>
+
+          {/* Agent Platform Routes */}
+          <Route
+            path="/agent/*"
+            element={
+              <AgentRoute>
+                <Routes>
+                  <Route element={<AgentLayout />}>
+                    <Route index element={<AgentDashboard />} />
+                    <Route path="listings" element={<AgentListings />} />
+                    {/* Add more agent routes here later (Profile, etc.) */}
+                  </Route>
+                </Routes>
+              </AgentRoute>
+            }
+          />
 
           {/* Admin Routes - Clean Layout */}
           <Route

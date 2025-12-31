@@ -2,11 +2,9 @@
 .profile-page {
     min-height: 100vh;
     padding: 120px 1rem 3rem;
-    /* Top padding to clear fixed header */
     position: relative;
     overflow-x: hidden;
     background: #0f172a;
-    /* Fallback */
 }
 
 /* Background Image with Blur */
@@ -25,7 +23,6 @@
     transform: scale(1.1);
     z-index: 0;
     position: fixed;
-    /* Fix background during scroll */
 }
 
 /* Gradient Overlay */
@@ -123,7 +120,8 @@
 }
 
 .profile-email {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.9) !important;
+    /* Made brighter */
     font-size: 1.1rem;
     margin-bottom: 1rem;
 }
@@ -192,7 +190,8 @@
 
 .profile-form label {
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.95) !important;
+    /* Ensuring visibility */
     font-size: 0.95rem;
     margin-bottom: 0.5rem;
     display: block;
@@ -207,7 +206,8 @@
 .profile-form .input-icon {
     position: absolute;
     left: 16px;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.8);
+    /* Brighter icon */
     pointer-events: none;
     z-index: 3;
 }
@@ -216,11 +216,13 @@
 .profile-form textarea {
     width: 100%;
     padding: 14px 16px 14px 48px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    /* Higher contrast border */
     border-radius: 16px;
     font-size: 1rem;
     transition: all 0.3s;
-    background: rgba(255, 255, 255, 0.05) !important;
+    background: rgba(0, 0, 0, 0.2) !important;
+    /* Darker background for contrast */
     color: white !important;
 }
 
@@ -232,78 +234,179 @@
 .profile-form textarea:focus {
     outline: none;
     border-color: var(--primary);
-    background: rgba(255, 255, 255, 0.1) !important;
+    background: rgba(0, 0, 0, 0.4) !important;
     box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
 }
 
 .profile-form input:disabled,
 .profile-form textarea:disabled {
-    opacity: 0.7;
+    opacity: 0.8;
     cursor: default;
     border-color: transparent;
-    background: rgba(255, 255, 255, 0.03) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
 }
 
 /* Activity Stats */
-.activity-stats {
+.profile-page .activity-stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
+    margin-top: 1rem;
 }
 
-.stat-card {
+.profile-page .stat-card {
     display: flex;
     align-items: center;
     gap: 1.2rem;
     padding: 1.5rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    transition: all 0.3s;
+    background: rgba(15, 23, 42, 0.6) !important;
+    /* Dark slate glass - forced */
+    backdrop-filter: blur(16px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 24px !important;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
 }
 
-.stat-card:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateY(-4px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+.profile-page .stat-card:hover {
+    background: rgba(15, 23, 42, 0.8) !important;
+    transform: translateY(-5px);
+    border-color: rgba(255, 255, 255, 0.2) !important;
 }
 
-.stat-icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 16px;
-    background: linear-gradient(135deg, var(--primary) 0%, rgba(255, 255, 255, 0.2) 100%);
+.profile-page .stat-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    min-width: 64px;
 }
 
-.stat-info h3 {
-    font-size: 2rem;
-    font-weight: 800;
-    color: white;
-    margin: 0;
+.profile-page .stat-info h3 {
+    font-size: 2.5rem !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    /* Forced white */
+    margin: 0 !important;
+    line-height: 1 !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.stat-info p {
-    color: rgba(255, 255, 255, 0.6);
+.profile-page .stat-info p {
+    color: rgba(255, 255, 255, 0.8) !important;
+    /* Brighter fallback */
+    margin: 4px 0 0 0 !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px;
+    text-transform: none;
+}
+
+/* My Bookings Styles */
+.bookings-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.booking-card {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.booking-card:hover {
+    background: rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.booking-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.booking-header h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
     margin: 0;
+    color: white;
+}
+
+.booking-status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.booking-status.confirmed {
+    background: rgba(16, 185, 129, 0.2);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.booking-status.pending {
+    background: rgba(245, 158, 11, 0.2);
+    color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.booking-status.cancelled {
+    background: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.booking-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.detail-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: rgba(255, 255, 255, 0.8);
     font-size: 0.9rem;
+}
+
+.detail-row svg {
+    color: var(--primary);
+}
+
+.detail-row.price {
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 1rem;
+    color: white;
+    justify-content: space-between;
 }
 
 /* Empty State */
 .empty-state {
     text-align: center;
     padding: 4rem 2rem;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.6);
     background: rgba(0, 0, 0, 0.2);
     border-radius: 20px;
 }
 
 .empty-state svg {
-    color: rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.4);
     margin-bottom: 1rem;
 }
 

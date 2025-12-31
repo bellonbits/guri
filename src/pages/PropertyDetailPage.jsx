@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import analytics from '../utils/analytics';
-import { MapPin, Bed, Bath, Square, Phone, Mail, ChevronLeft, ChevronRight, Heart, Share2, Check, Calendar } from 'lucide-react';
+import { MapPin, Bed, Bath, Square, Phone, Mail, ChevronLeft, ChevronRight, Heart, Share2, Check, Calendar, Star } from 'lucide-react';
 import { propertyApi, transformProperty, formatPrice } from '../utils/propertyApi';
 import PropertyCard from '../components/PropertyCard';
 import Map from '../components/Map';
+import ChatWidget from '../components/ChatWidget';
 import { useAuth } from '../context/AuthContext';
 import { trackUserView, createInquiry } from '../utils/api';
 import './PropertyDetailPage.css';
@@ -21,6 +22,11 @@ function PropertyDetailPage() {
     const { user } = useAuth();
     const [inquiryForm, setInquiryForm] = useState({ name: '', email: '', phone: '', message: '' });
     const [submitting, setSubmitting] = useState(false);
+
+    // Booking State
+    const [bookingDates, setBookingDates] = useState({ checkIn: '', checkOut: '' });
+    const [guests, setGuests] = useState(1);
+    const [totalPrice, setTotalPrice] = useState(0);
 
     // Fetch property by slug
     useEffect(() => {
@@ -53,9 +59,11 @@ function PropertyDetailPage() {
         if (property) {
             analytics.trackPropertyView(property);
 
-            // Track for user history if logged in
+            // Track for user history only if authenticated to avoid 401s
             if (user && property.id) {
-                trackUserView(property.id).catch(err => console.log("View tracking optional/failed:", err));
+                trackUserView(property.id).catch(err => {
+                    // Silent fail for optional tracking
+                });
             }
         }
     }, [property, user]);
@@ -72,6 +80,95 @@ function PropertyDetailPage() {
         }
     }, [user]);
 
+    // Booking Handlers
+    const handleBookingSubmit = async (e) => {
+        e.preventDefault();
+        if (!user) {
+            alert("Please login to book this property.");
+            return;
+        }
+
+        if (!bookingDates.checkIn || !bookingDates.checkOut) {
+            alert("Please select both check-in and check-out dates.");
+            return;
+        }
+
+        const payload = {
+            property_id: property.id,
+            check_in: new Date(bookingDates.checkIn).toISOString(),
+            check_out: new Date(bookingDates.checkOut).toISOString(),
+            guest_count: guests
+        };
+
+        console.log("Sending Booking Payload:", payload);
+
+        setSubmitting(true);
+        try {
+            await propertyApi.createBooking(payload);
+            alert('Booking confirmed! Check your dashboard for details.');
+            setBookingDates({ checkIn: '', checkOut: '' });
+        } catch (error) {
+            console.error("Booking failed", error);
+
+            let errorMessage = "Booking failed. Please try again.";
+            if (error.response) {
+                if (error.response.status === 422 && Array.isArray(error.response.data.detail)) {
+                    // Pydantic validation error
+                    errorMessage = "Validation Error: " + error.response.data.detail.map(err => `${err.loc.join('.')}: ${err.msg}`).join('\n');
+                } else if (error.response.data.detail) {
+                    errorMessage = error.response.data.detail;
+                }
+            }
+            alert(errorMessage);
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    // Calculate total price when dates change
+    useEffect(() => {
+        if (bookingDates.checkIn && bookingDates.checkOut && property?.price) {
+            const start = new Date(bookingDates.checkIn);
+            const end = new Date(bookingDates.checkOut);
+            const nights = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+            if (nights > 0) {
+                setTotalPrice(nights * property.price);
+            } else {
+                setTotalPrice(0);
+            }
+        }
+    }, [bookingDates, property]);
+
+    const handleInquiryChange = (e) => {
+        const { name, value } = e.target;
+        setInquiryForm(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleInquirySubmit = async (e) => {
+        e.preventDefault();
+
+        if (inquiryForm.message.length < 10) {
+            alert("Message must be at least 10 characters long.");
+            return;
+        }
+
+        setSubmitting(true);
+        try {
+            await createInquiry({
+                property_id: property.id,
+                ...inquiryForm
+            });
+            alert('Your request has been sent! An agent will contact you soon.');
+            setInquiryForm({ name: user?.name || '', email: user?.email || '', phone: user?.phone || '', message: '' });
+            setShowContactForm(false);
+        } catch (error) {
+            console.error('Inquiry failed:', error);
+            alert('Failed to send inquiry. Please try again.');
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
     if (!property) {
         return (
             <div className="not-found">
@@ -83,30 +180,6 @@ function PropertyDetailPage() {
             </div>
         );
     }
-
-    const handleInquiryChange = (e) => {
-        setInquiryForm({ ...inquiryForm, [e.target.name]: e.target.value });
-    };
-
-    const handleInquirySubmit = async (e) => {
-        e.preventDefault();
-        setSubmitting(true);
-        try {
-            await createInquiry({
-                ...inquiryForm,
-                property_id: property.id,
-                message: inquiryForm.message || "I am interested in this property."
-            });
-            alert('Request sent successfully!');
-            setShowContactForm(false);
-            setInquiryForm({ name: '', email: '', phone: '', message: '' });
-        } catch (error) {
-            console.error("Inquiry failed", error);
-            alert("Failed to send request. Please try again.");
-        } finally {
-            setSubmitting(false);
-        }
-    };
 
 
 
@@ -230,74 +303,147 @@ function PropertyDetailPage() {
                         </div>
 
                         <div className="detail-sidebar">
-                            <div className="agent-card">
-                                <h3>Contact Agent</h3>
-                                <div className="agent-info">
-                                    <div className="agent-avatar">
-                                        <span>{property.agent.name.charAt(0)}</span>
+                            {property.purpose === 'Stay' ? (
+                                <div className="booking-widget">
+                                    <div className="booking-header">
+                                        <div className="booking-price">
+                                            <span className="amount">{formatPrice(property.price, property.currency)}</span>
+                                            <span className="unit"> / night</span>
+                                        </div>
+                                        <div className="booking-rating">
+                                            <Star size={14} fill="currentColor" />
+                                            <span>4.9 (12 reviews)</span>
+                                        </div>
                                     </div>
-                                    <div className="agent-details">
-                                        <strong>{property.agent.name}</strong>
-                                        <span>Property Agent</span>
-                                    </div>
-                                </div>
-                                <div className="agent-contacts">
-                                    <a href={`tel:${property.agent.phone}`} className="btn btn-primary">
-                                        <Phone size={18} />
-                                        Call Now
-                                    </a>
-                                    <a href={`mailto:${property.agent.email}`} className="btn btn-secondary">
-                                        <Mail size={18} />
-                                        Email
-                                    </a>
-                                </div>
-                                <button
-                                    className="btn btn-outline-primary schedule-btn"
-                                    onClick={() => setShowContactForm(!showContactForm)}
-                                >
-                                    <Calendar size={18} />
-                                    Schedule a Visit
-                                </button>
 
-                                {showContactForm && (
-                                    <form className="contact-form" onSubmit={handleInquirySubmit}>
-                                        <input
-                                            type="text"
-                                            name="name"
-                                            placeholder="Your Name"
-                                            value={inquiryForm.name}
-                                            onChange={handleInquiryChange}
-                                            required
-                                        />
-                                        <input
-                                            type="email"
-                                            name="email"
-                                            placeholder="Your Email"
-                                            value={inquiryForm.email}
-                                            onChange={handleInquiryChange}
-                                            required
-                                        />
-                                        <input
-                                            type="tel"
-                                            name="phone"
-                                            placeholder="Your Phone"
-                                            value={inquiryForm.phone}
-                                            onChange={handleInquiryChange}
-                                            required
-                                        />
-                                        <textarea
-                                            name="message"
-                                            placeholder="Message"
-                                            rows="3"
-                                            value={inquiryForm.message}
-                                            onChange={handleInquiryChange}
-                                        ></textarea>
-                                        <button type="submit" className="btn btn-primary" disabled={submitting}>
-                                            {submitting ? 'Sending...' : 'Send Request'}
+                                    <form className="booking-form" onSubmit={handleBookingSubmit}>
+                                        <div className="date-picker-group">
+                                            <div className="date-input">
+                                                <label>CHECK-IN</label>
+                                                <input
+                                                    type="date"
+                                                    value={bookingDates.checkIn}
+                                                    min={new Date().toISOString().split('T')[0]}
+                                                    onChange={(e) => setBookingDates({ ...bookingDates, checkIn: e.target.value })}
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="date-input">
+                                                <label>CHECK-OUT</label>
+                                                <input
+                                                    type="date"
+                                                    value={bookingDates.checkOut}
+                                                    min={bookingDates.checkIn || new Date().toISOString().split('T')[0]}
+                                                    onChange={(e) => setBookingDates({ ...bookingDates, checkOut: e.target.value })}
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="guest-picker">
+                                            <label>GUESTS</label>
+                                            <select value={guests} onChange={(e) => setGuests(parseInt(e.target.value))}>
+                                                {[1, 2, 3, 4, 5, 6].map(n => (
+                                                    <option key={n} value={n}>{n} guest{n > 1 ? 's' : ''}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+
+                                        <button type="submit" className="btn btn-primary booking-btn" disabled={submitting}>
+                                            {submitting ? 'Confirming...' : 'Reserve'}
                                         </button>
+
+                                        <p className="no-charge-note">You won't be charged yet</p>
+
+                                        {totalPrice > 0 && (
+                                            <div className="price-breakdown">
+                                                <div className="price-row">
+                                                    <span>{formatPrice(property.price, property.currency)} x {Math.ceil((new Date(bookingDates.checkOut) - new Date(bookingDates.checkIn)) / (1000 * 60 * 60 * 24))} nights</span>
+                                                    <span>{formatPrice(totalPrice, property.currency)}</span>
+                                                </div>
+                                                <div className="price-row">
+                                                    <span>Service fee</span>
+                                                    <span>{formatPrice(totalPrice * 0.05, property.currency)}</span>
+                                                </div>
+                                                <hr />
+                                                <div className="price-row total">
+                                                    <span>Total</span>
+                                                    <span>{formatPrice(totalPrice * 1.05, property.currency)}</span>
+                                                </div>
+                                            </div>
+                                        )}
                                     </form>
-                                )}
-                            </div>
+                                </div>
+                            ) : (
+                                <div className="agent-card">
+                                    <h3>Contact Agent</h3>
+                                    <div className="agent-info">
+                                        <div className="agent-avatar">
+                                            <span>{property.agent.name.charAt(0)}</span>
+                                        </div>
+                                        <div className="agent-details">
+                                            <strong>{property.agent.name}</strong>
+                                            <span>Property Agent</span>
+                                        </div>
+                                    </div>
+                                    <div className="agent-contacts">
+                                        <a href={`tel:${property.agent.phone}`} className="btn btn-primary">
+                                            <Phone size={18} />
+                                            Call Now
+                                        </a>
+                                        <a href={`mailto:${property.agent.email}`} className="btn btn-secondary">
+                                            <Mail size={18} />
+                                            Email
+                                        </a>
+                                    </div>
+                                    <button
+                                        className="btn btn-outline-primary schedule-btn"
+                                        onClick={() => setShowContactForm(!showContactForm)}
+                                    >
+                                        <Calendar size={18} />
+                                        Schedule a Visit
+                                    </button>
+
+                                    {showContactForm && (
+                                        <form className="contact-form" onSubmit={handleInquirySubmit}>
+                                            <input
+                                                type="text"
+                                                name="name"
+                                                placeholder="Your Name"
+                                                value={inquiryForm.name}
+                                                onChange={handleInquiryChange}
+                                                required
+                                            />
+                                            <input
+                                                type="email"
+                                                name="email"
+                                                placeholder="Your Email"
+                                                value={inquiryForm.email}
+                                                onChange={handleInquiryChange}
+                                                required
+                                            />
+                                            <input
+                                                type="tel"
+                                                name="phone"
+                                                placeholder="Your Phone"
+                                                value={inquiryForm.phone}
+                                                onChange={handleInquiryChange}
+                                                required
+                                            />
+                                            <textarea
+                                                name="message"
+                                                placeholder="Message"
+                                                rows="3"
+                                                value={inquiryForm.message}
+                                                onChange={handleInquiryChange}
+                                            ></textarea>
+                                            <button type="submit" className="btn btn-primary" disabled={submitting}>
+                                                {submitting ? 'Sending...' : 'Send Request'}
+                                            </button>
+                                        </form>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -315,6 +461,14 @@ function PropertyDetailPage() {
                         </div>
                     </div>
                 </section>
+            )}
+            {/* Chat Widget for Stays */}
+            {property?.purpose === 'Stay' && (
+                <ChatWidget
+                    propertyId={property.id}
+                    propertyTitle={property.title}
+                    agentName={property.agent.name}
+                />
             )}
         </div>
     );

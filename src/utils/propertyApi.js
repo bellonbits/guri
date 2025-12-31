@@ -15,7 +15,11 @@ const api = axios.create({
 export const propertyApi = {
     // Get all properties with filters
     getProperties: async (params = {}) => {
-        const response = await api.get('/properties', { params });
+        const fetchParams = { ...params };
+        if (fetchParams.purpose && fetchParams.purpose.toLowerCase() === 'buy') {
+            fetchParams.purpose = 'sale';
+        }
+        const response = await api.get('/properties', { params: fetchParams });
         return response.data;
     },
 
@@ -34,11 +38,21 @@ export const propertyApi = {
     // Filter properties by purpose
     getPropertiesByPurpose: async (purpose, page = 1, pageSize = 20) => {
         const params = { page, page_size: pageSize };
+        let normalizedPurpose = purpose;
+
         if (purpose && purpose !== 'all') {
-            params.purpose = purpose.toLowerCase();
+            normalizedPurpose = purpose.toLowerCase();
+            if (normalizedPurpose === 'buy') normalizedPurpose = 'sale';
+            params.purpose = normalizedPurpose;
         }
-        const response = await api.get('/properties', { params });
-        return response.data;
+
+        try {
+            const response = await api.get('/properties', { params });
+            return response.data;
+        } catch (error) {
+            console.error("Failed to fetch properties by purpose:", error);
+            throw error;
+        }
     },
 
     // Filter properties by type
@@ -59,6 +73,57 @@ export const propertyApi = {
                 page,
                 page_size: pageSize
             }
+        });
+        return response.data;
+    },
+
+    // Create a new booking
+    createBooking: async (bookingData) => {
+        const response = await api.post('/bookings', bookingData);
+        return response.data;
+    },
+
+    // Get availability dates for a property
+    getAvailability: async (propertyId) => {
+        const response = await api.get(`/bookings/property/${propertyId}/availability`);
+        return response.data;
+    },
+
+    // Get my bookings
+    getMyBookings: async () => {
+        const response = await api.get('/bookings/me');
+        return response.data;
+    },
+
+    // --- Agent Actions ---
+
+    // Get Agent's Properties
+    getAgentProperties: async (page = 1, pageSize = 20) => {
+        // Assuming backend supports this or filtering by current user
+        const response = await api.get('/agent/properties', {
+            params: { page, page_size: pageSize }
+        });
+        return response.data;
+    },
+
+    // Create New Property
+    createProperty: async (propertyData) => {
+        const response = await api.post('/agent/properties', propertyData);
+        return response.data;
+    },
+
+    // Update Property
+    updateProperty: async (id, propertyData) => {
+        const response = await api.patch(`/agent/properties/${id}`, propertyData);
+        return response.data;
+    },
+
+    // Upload Property Image
+    uploadImage: async (file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        const response = await api.post('/agent/upload', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
         });
         return response.data;
     }
@@ -86,7 +151,8 @@ export const mapPropertyType = (type) => {
 export const mapPropertyPurpose = (purpose) => {
     const purposeMap = {
         'rent': 'Rent',
-        'sale': 'Buy'
+        'sale': 'Buy',
+        'stay': 'Stay'
     };
     return purposeMap[purpose] || purpose;
 };

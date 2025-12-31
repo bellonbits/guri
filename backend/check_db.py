@@ -16,19 +16,24 @@ credentials = [
 ]
 
 async def check_creds():
-    base_url = "postgresql+asyncpg://{user}:{password}@127.0.0.1:5432/guri24"
+    databases = ["guri24", "guri24_db"]
+    base_url_template = "postgresql+asyncpg://{user}:{password}@127.0.0.1:5432/{dbname}"
     
-    for user, password in credentials:
-        url = base_url.format(user=user, password=password)
-        print(f"Trying user={user} pass={password}...")
+    for db in databases:
+        print(f"Checking database: {db}")
+        for user, password in credentials:
+            url = base_url_template.format(user=user, password=password, dbname=db)
+            print(f"Trying user={user} pass={password} db={db}...")
         try:
             engine = create_async_engine(url)
             async with engine.connect() as conn:
                 await conn.execute(text("SELECT 1"))
-            print(f"SUCCESS! Working credentials: {user} / {password}")
+            print(f"SUCCESS! Working credentials: {user} / {password} db={db}")
+            with open("db_creds.txt", "w") as f:
+                f.write(f"postgresql+asyncpg://{user}:{password}@127.0.0.1:5432/{db}")
             return
         except Exception as e:
-            print(f"Failed: {e}")
+            pass
 
 if __name__ == "__main__":
     asyncio.run(check_creds())

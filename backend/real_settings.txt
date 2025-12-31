@@ -1,0 +1,1 @@
+postgresql+asyncpg://admin:12345678@localhost:5432/guri24

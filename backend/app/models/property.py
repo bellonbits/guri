@@ -15,6 +15,7 @@ class PropertyType(str, enum.Enum):
 class PropertyPurpose(str, enum.Enum):
     SALE = "sale"
     RENT = "rent"
+    STAY = "stay" # Airbnb style short-term stay
 
 class PropertyStatus(str, enum.Enum):
     DRAFT = "draft"

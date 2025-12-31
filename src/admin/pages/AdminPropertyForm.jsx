@@ -232,6 +232,7 @@ function AdminPropertyForm() {
                                 <select name="purpose" value={formData.purpose} onChange={handleChange}>
                                     <option value="rent">For Rent</option>
                                     <option value="sale">For Sale</option>
+                                    <option value="stay">Short-term Stay</option>
                                 </select>
                             </div>
                             <div className="form-group">
