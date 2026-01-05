@@ -1,13 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+from fastapi import APIRouter, Depends, HTTPException, status, Query, File, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func, or_
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 from app.database import get_db
 from app.models.property import Property, PropertyType, PropertyPurpose, PropertyStatus
 from app.models.user import User
 from app.schemas.property import PropertyCreate, PropertyUpdate, PropertyResponse, PropertyListResponse
 from app.core.dependencies import get_current_user, get_current_active_user
+from app.services.storage_service import storage_service
 import re
 
 router = APIRouter(prefix="/properties", tags=["Properties"])
@@ -288,3 +289,43 @@ async def track_property_view(
         await db.commit()
     
     return None
+
+@router.post("/{property_id}/images", response_model=PropertyResponse)
+async def upload_property_images(
+    property_id: str,
+    files: List[UploadFile] = File(...),
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Upload images for a property"""
+    
+    stmt = select(Property).where(Property.id == property_id)
+    result = await db.execute(stmt)
+    property = result.scalar_one_or_none()
+    
+    if not property:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Property not found"
+        )
+        
+    # Check permissions
+    if current_user.role not in ["admin", "super_admin"] and str(property.agent_id) != str(current_user.id):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to upload images for this property"
+        )
+    
+    uploaded_urls = []
+    for file in files:
+        url = await storage_service.upload_file(file)
+        uploaded_urls.append(url)
+    
+    # Update property images list
+    current_images = property.images or []
+    property.images = current_images + uploaded_urls
+    
+    await db.commit()
+    await db.refresh(property)
+    
+    return property

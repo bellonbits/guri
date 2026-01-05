@@ -56,6 +56,15 @@ class Settings(BaseSettings):
     MAX_FILE_SIZE: int = 10485760
     ALLOWED_EXTENSIONS: str = "jpg,jpeg,png,pdf"
     UPLOAD_DIR: str = "./uploads"
+
+    # MinIO / S3 Storage
+    S3_ENDPOINT: str = "http://localhost:9000"
+    S3_ACCESS_KEY: str = "minioadmin"
+    S3_SECRET_KEY: str = "minioadmin"
+    S3_BUCKET: str = "guri24"
+    S3_USE_SSL: bool = False
+    S3_REGION: str = "us-east-1"
+    S3_PUBLIC_URL_OVERRIDE: str = "" # Useful for Docker
     
     # Admin
     ADMIN_EMAIL: str

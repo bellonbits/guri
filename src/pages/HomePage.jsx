@@ -10,6 +10,7 @@ import './HomePage.css';
 function HomePage() {
     const [activeTab, setActiveTab] = useState('buy'); // 'buy' or 'rent'
     const [scrolled, setScrolled] = useState(false);
+    const [activeCategory, setActiveCategory] = useState('Mansions');
     const [locationInput, setLocationInput] = useState('');
     const [propertyType, setPropertyType] = useState('');
     const [priceRange, setPriceRange] = useState('');
@@ -163,8 +164,11 @@ function HomePage() {
                         ].map((cat, i) => (
                             <button
                                 key={i}
-                                className="category-pill"
-                                onClick={() => analytics.trackCategorySelect(cat.name)}
+                                className={`category-pill ${activeCategory === cat.name ? 'active' : ''}`}
+                                onClick={() => {
+                                    setActiveCategory(cat.name);
+                                    analytics.trackCategorySelect(cat.name);
+                                }}
                             >
                                 {cat.icon}
                                 <span>{cat.name}</span>

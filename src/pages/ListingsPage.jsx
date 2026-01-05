@@ -11,6 +11,7 @@ function ListingsPage({ purpose = 'all', title = 'All Listings', subtitle = 'Bro
     const [sortBy, setSortBy] = useState('newest');
     const [properties, setProperties] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showFilters, setShowFilters] = useState(false);
 
     // Fetch properties from API
     useEffect(() => {
@@ -76,7 +77,17 @@ function ListingsPage({ purpose = 'all', title = 'All Listings', subtitle = 'Bro
             {/* Filters */}
             <section className="listings-filters">
                 <div className="container">
-                    <div className="filters-bar">
+                    <div className="filters-header">
+                        <button
+                            className={`mobile-filter-toggle ${showFilters ? 'active' : ''}`}
+                            onClick={() => setShowFilters(!showFilters)}
+                        >
+                            <SlidersHorizontal size={20} />
+                            <span>{showFilters ? 'Hide Filters' : 'Filter & Search'}</span>
+                        </button>
+                    </div>
+
+                    <div className={`filters-bar ${showFilters ? 'show' : ''}`}>
                         <div className="search-input">
                             <Search size={20} />
                             <input
@@ -151,7 +162,14 @@ function ListingsPage({ purpose = 'all', title = 'All Listings', subtitle = 'Bro
                             ))
                         ) : (
                             <div className="no-results">
-                                <SlidersHorizontal size={48} />
+                                <SlidersHorizontal
+                                    size={48}
+                                    onClick={() => {
+                                        setShowFilters(true);
+                                        window.scrollTo({ top: 100, behavior: 'smooth' });
+                                    }}
+                                    style={{ cursor: 'pointer' }}
+                                />
                                 <h3>No properties found</h3>
                                 <p>Try adjusting your search or filters</p>
                             </div>
