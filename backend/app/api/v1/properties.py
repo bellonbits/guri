@@ -94,7 +94,6 @@ async def list_properties(
     )
 
 @router.get("/{slug}", response_model=PropertyResponse)
-@router.get("/{slug}", response_model=PropertyResponse)
 async def get_property(
     slug: str,
     current_user: Optional[User] = Depends(get_current_user),

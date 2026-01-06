@@ -65,9 +65,9 @@ services:
       - S3_SECRET_KEY=${S3_SECRET_KEY:-minioadmin}
       - S3_BUCKET=${S3_BUCKET:-guri24}
       # Use localhost for public browser access if running locally, or the server IP
-      - S3_PUBLIC_URL_OVERRIDE=http://localhost:9000
+      - S3_PUBLIC_URL_OVERRIDE=http://143.198.30.249:9000
       - ALLOWED_HOSTS=*
-      - CORS_ORIGINS=*
+      - CORS_ORIGINS=http://localhost:5173,http://143.198.30.249,http://guri24.com,https://guri24.com,http://www.guri24.com,https://www.guri24.com
       - DEBUG=True
     depends_on:
       - db
