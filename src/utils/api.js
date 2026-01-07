@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://143.198.30.249:8001/api/v1',
+    baseURL: 'https://api.guri24.com/api/v1',
     withCredentials: true, // Send cookies with requests
     headers: {
         'Content-Type': 'application/json',
@@ -12,7 +12,19 @@ const api = axios.create({
 api.interceptors.response.use(
     (response) => response.data,
     (error) => {
-        const message = error.response?.data?.detail || error.message;
+        let message = error.message;
+
+        if (error.response?.data?.detail) {
+            const detail = error.response.data.detail;
+            if (typeof detail === 'string') {
+                message = detail;
+            } else if (Array.isArray(detail)) {
+                // Handle Pydantic validation errors
+                message = detail.map(err => `${err.loc[err.loc.length - 1]}: ${err.msg}`).join(', ');
+            } else {
+                message = JSON.stringify(detail);
+            }
+        }
 
         if (error.response?.status === 401) {
             // Handle unauthorized access (e.g., redirect to login)

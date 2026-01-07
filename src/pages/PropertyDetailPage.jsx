@@ -34,16 +34,58 @@ function PropertyDetailPage() {
             try {
                 setLoading(true);
                 const data = await propertyApi.getPropertyBySlug(slug);
-                const transformed = transformProperty(data);
+                console.log("Property Detail Response:", data);
+
+                if (!data) {
+                    console.error("No data received for property:", slug);
+                    throw new Error("Property not found");
+                }
+
+                // Robust extraction for single property
+                let propertyData = data;
+
+                // Check if data is wrapped
+                if (data.items) {
+                    propertyData = data.items;
+                } else if (data.property) {
+                    propertyData = data.property;
+                } else if (data.properties) {
+                    propertyData = data.properties;
+                }
+
+                // If the single get returns an array, take first
+                if (Array.isArray(propertyData)) {
+                    propertyData = propertyData[0];
+                }
+
+                if (!propertyData) {
+                    console.error("Could not extract property data from response:", data);
+                    throw new Error("Invalid property data format");
+                }
+
+                const transformed = transformProperty(propertyData);
                 setProperty(transformed);
 
-                // Fetch related properties (same type)
-                const relatedResponse = await propertyApi.getPropertiesByType(data.type, 1, 4);
-                const relatedTransformed = relatedResponse.properties
-                    .filter(p => p.slug !== slug)
-                    .map(transformProperty)
-                    .slice(0, 3);
-                setRelatedProperties(relatedTransformed);
+                // Fetch related properties (safe check)
+                if (propertyData.type) {
+                    try {
+                        const relatedResponse = await propertyApi.getPropertiesByType(propertyData.type, 1, 4);
+                        // Safe extraction for related
+                        let relatedList = [];
+                        if (Array.isArray(relatedResponse)) { relatedList = relatedResponse; }
+                        else if (relatedResponse && Array.isArray(relatedResponse.items)) { relatedList = relatedResponse.items; }
+                        else if (relatedResponse && Array.isArray(relatedResponse.properties)) { relatedList = relatedResponse.properties; }
+                        else if (relatedResponse?.items?.properties && Array.isArray(relatedResponse.items.properties)) { relatedList = relatedResponse.items.properties; }
+
+                        const relatedTransformed = relatedList
+                            .filter(p => p.slug !== slug)
+                            .map(transformProperty)
+                            .slice(0, 3);
+                        setRelatedProperties(relatedTransformed);
+                    } catch (relatedError) {
+                        console.warn("Failed to fetch related properties", relatedError);
+                    }
+                }
             } catch (error) {
                 console.error('Failed to fetch property:', error);
                 setProperty(null);
@@ -292,9 +334,7 @@ function PropertyDetailPage() {
                                     <h2>Location</h2>
                                     <div style={{ marginTop: '20px' }}>
                                         <Map
-                                            lat={property.coordinates.lat}
-                                            lng={property.coordinates.lng}
-                                            popupText={property.title}
+                                            center={{ lat: parseFloat(property.coordinates.lat), lng: parseFloat(property.coordinates.lng) }}
                                             zoom={15}
                                         />
                                     </div>

@@ -29,7 +29,21 @@ function HomePage() {
             try {
                 setLoading(true);
                 const response = await propertyApi.getProperties({ page: 1, page_size: 4 });
-                const transformed = response.properties.map(transformProperty);
+                console.log("API Response:", response); // Debug log
+
+                // Robust extraction of the array
+                let propertiesList = [];
+                if (Array.isArray(response)) {
+                    propertiesList = response;
+                } else if (response?.items?.properties && Array.isArray(response.items.properties)) {
+                    propertiesList = response.items.properties;
+                } else if (response && Array.isArray(response.items)) {
+                    propertiesList = response.items;
+                } else if (response && Array.isArray(response.properties)) {
+                    propertiesList = response.properties;
+                }
+
+                const transformed = propertiesList.map(transformProperty);
                 setFeaturedProperties(transformed);
             } catch (error) {
                 console.error('Failed to fetch properties:', error);

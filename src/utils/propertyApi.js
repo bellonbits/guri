@@ -1,15 +1,13 @@
-import axios from 'axios';
+import api from './api';
 
-const API_BASE_URL = 'http://143.198.30.249:8001/api/v1';
-
-// Create axios instance
-const api = axios.create({
-    baseURL: API_BASE_URL,
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    withCredentials: true, // Important for cookies
-});
+// Helper to handle potential relative URLs in images
+const getImageUrl = (url) => {
+    if (!url) return null;
+    if (url.startsWith('http')) return url;
+    // Remove leading slash if present
+    const cleanUrl = url.startsWith('/') ? url.slice(1) : url;
+    return `https://api.guri24.com/${cleanUrl}`;
+};
 
 // Property API functions
 export const propertyApi = {
@@ -20,19 +18,20 @@ export const propertyApi = {
             fetchParams.purpose = 'sale';
         }
         const response = await api.get('/properties', { params: fetchParams });
-        return response.data;
+        // Handle pagination structure: { items: [], total: ... } or just []
+        return response.items ? response : { items: response.data || response };
     },
 
     // Get property by slug
     getPropertyBySlug: async (slug) => {
         const response = await api.get(`/properties/${slug}`);
-        return response.data;
+        return response;
     },
 
     // Get property by ID
     getPropertyById: async (id) => {
         const response = await api.get(`/properties/id/${id}`);
-        return response.data;
+        return response;
     },
 
     // Filter properties by purpose
@@ -48,7 +47,7 @@ export const propertyApi = {
 
         try {
             const response = await api.get('/properties', { params });
-            return response.data;
+            return response;
         } catch (error) {
             console.error("Failed to fetch properties by purpose:", error);
             throw error;
@@ -62,7 +61,7 @@ export const propertyApi = {
             params.type = type.toLowerCase();
         }
         const response = await api.get('/properties', { params });
-        return response.data;
+        return response;
     },
 
     // Search properties
@@ -74,25 +73,25 @@ export const propertyApi = {
                 page_size: pageSize
             }
         });
-        return response.data;
+        return response;
     },
 
     // Create a new booking
     createBooking: async (bookingData) => {
         const response = await api.post('/bookings', bookingData);
-        return response.data;
+        return response;
     },
 
     // Get availability dates for a property
     getAvailability: async (propertyId) => {
         const response = await api.get(`/bookings/property/${propertyId}/availability`);
-        return response.data;
+        return response;
     },
 
     // Get my bookings
     getMyBookings: async () => {
         const response = await api.get('/bookings/me');
-        return response.data;
+        return response;
     },
 
     // --- Agent Actions ---
@@ -103,19 +102,19 @@ export const propertyApi = {
         const response = await api.get('/agent/properties', {
             params: { page, page_size: pageSize }
         });
-        return response.data;
+        return response;
     },
 
     // Create New Property
     createProperty: async (propertyData) => {
         const response = await api.post('/agent/properties', propertyData);
-        return response.data;
+        return response;
     },
 
     // Update Property
     updateProperty: async (id, propertyData) => {
         const response = await api.patch(`/agent/properties/${id}`, propertyData);
-        return response.data;
+        return response;
     },
 
     // Upload Property Image
@@ -125,7 +124,7 @@ export const propertyApi = {
         const response = await api.post('/agent/upload', formData, {
             headers: { 'Content-Type': 'multipart/form-data' }
         });
-        return response.data;
+        return response;
     }
 };
 

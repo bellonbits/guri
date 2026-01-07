@@ -1,6 +1,4 @@
-import aiosmtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+import resend
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from pathlib import Path
 from app.config import settings
@@ -11,10 +9,9 @@ logger = logging.getLogger(__name__)
 
 class EmailService:
     def __init__(self):
-        self.smtp_host = settings.SMTP_HOST
-        self.smtp_port = settings.SMTP_PORT
-        self.smtp_user = settings.SMTP_USER
-        self.smtp_password = settings.SMTP_PASSWORD
+        # Configure Resend with API Key
+        resend.api_key = settings.RESEND_API_KEY
+        
         self.from_email = settings.EMAIL_FROM
         self.from_name = settings.EMAIL_FROM_NAME
         
@@ -33,36 +30,23 @@ class EmailService:
         subject: str,
         html_content: str
     ):
-        """Send an email"""
+        """Send an email using Resend"""
         if not settings.EMAILS_ENABLED:
             logger.info(f"Email sending disabled. Would send to {to_email}: {subject}")
             return
         
         try:
-            message = MIMEMultipart("alternative")
-            message["Subject"] = subject
-            message["From"] = f"{self.from_name} <{self.from_email}>"
-            message["To"] = to_email
+            params = {
+                "from": f"{self.from_name} <{self.from_email}>",
+                "to": [to_email],
+                "subject": subject,
+                "html": html_content
+            }
+
+            r = resend.Emails.send(params)
+            logger.info(f"Email sent successfully to {to_email}. ID: {r.get('id')}")
+            return r
             
-            html_part = MIMEText(html_content, "html")
-            message.attach(html_part)
-            
-            # Send email using aiosmtplib
-            # Use TLS for 465, STARTTLS for 587
-            is_ssl = self.smtp_port == 465
-            is_starttls = self.smtp_port == 587
-            
-            await aiosmtplib.send(
-                message,
-                hostname=self.smtp_host,
-                port=self.smtp_port,
-                username=self.smtp_user,
-                password=self.smtp_password,
-                use_tls=is_ssl,
-                start_tls=is_starttls
-            )
-            
-            logger.info(f"Email sent successfully to {to_email}")
         except Exception as e:
             logger.error(f"Failed to send email to {to_email}: {str(e)}")
             raise
@@ -71,6 +55,11 @@ class EmailService:
         """Send email verification code"""
         try:
             template = self.template_env.get_template("verification.html")
+            html_content = template.render(
+                name=user.name,
+                verification_code=verification_code,
+                app_name=settings.APP_NAME
+            )
         except:
             # Fallback to simple HTML if template doesn't exist
             html_content = f"""
@@ -86,20 +75,11 @@ class EmailService:
                         </span>
                     </p>
                     <p>This code will expire in 24 hours.</p>
-                    <p>If you didn't create an account, please ignore this email.</p>
                     <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
-                    <p style="color: #999; font-size: 12px;">
-                        {settings.APP_NAME} - Premium Real Estate Platform
-                    </p>
+                    <p style="color: #999; font-size: 12px;">{settings.APP_NAME}</p>
                 </body>
             </html>
             """
-        else:
-            html_content = template.render(
-                name=user.name,
-                verification_code=verification_code,
-                app_name=settings.APP_NAME
-            )
         
         await self.send_email(
             to_email=user.email,
@@ -114,7 +94,7 @@ class EmailService:
             <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                 <h2>Password Reset Request</h2>
                 <p>Hi {user.name},</p>
-                <p>We received a request to reset your password. Click the button below to create a new password:</p>
+                <p>Click the button below to reset your password:</p>
                 <p style="text-align: center; margin: 30px 0;">
                     <a href="{reset_url}" 
                        style="background-color: #6366f1; color: white; padding: 12px 30px; 
@@ -122,14 +102,9 @@ class EmailService:
                         Reset Password
                     </a>
                 </p>
-                <p>Or copy and paste this link in your browser:</p>
-                <p style="word-break: break-all; color: #666;">{reset_url}</p>
-                <p>This link will expire in 1 hour.</p>
-                <p>If you didn't request a password reset, please ignore this email.</p>
+                <p>Link expires in 1 hour.</p>
                 <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
-                <p style="color: #999; font-size: 12px;">
-                    {settings.APP_NAME} - Premium Real Estate Platform
-                </p>
+                <p style="color: #999; font-size: 12px;">{settings.APP_NAME}</p>
             </body>
         </html>
         """
@@ -147,14 +122,7 @@ class EmailService:
             <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                 <h2>Welcome to {settings.APP_NAME}!</h2>
                 <p>Hi {user.name},</p>
-                <p>Your email has been verified successfully. You can now access all features of our platform.</p>
-                <p>Start exploring premium properties in Kenya:</p>
-                <ul>
-                    <li>Browse thousands of properties</li>
-                    <li>Save your favorites</li>
-                    <li>Contact agents directly</li>
-                    <li>Get personalized recommendations</li>
-                </ul>
+                <p>Your email has been verified successfully.</p>
                 <p style="text-align: center; margin: 30px 0;">
                     <a href="http://localhost:5173" 
                        style="background-color: #6366f1; color: white; padding: 12px 30px; 
@@ -163,9 +131,7 @@ class EmailService:
                     </a>
                 </p>
                 <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
-                <p style="color: #999; font-size: 12px;">
-                    {settings.APP_NAME} - Premium Real Estate Platform
-                </p>
+                <p style="color: #999; font-size: 12px;">{settings.APP_NAME}</p>
             </body>
         </html>
         """

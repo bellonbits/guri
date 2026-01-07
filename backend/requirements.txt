@@ -14,6 +14,6 @@ aioredis==2.0.1
 python-dotenv==1.0.0
 email-validator==2.1.0
 jinja2==3.1.2
-aiosmtplib==3.0.1
+resend
 boto3
 types-boto3

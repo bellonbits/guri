@@ -77,7 +77,7 @@ function RegisterPage() {
 
                     {error && (
                         <div className="error-message">
-                            {error}
+                            {typeof error === 'string' ? error : 'An unexpected error occurred'}
                         </div>
                     )}
 
@@ -122,9 +122,10 @@ function RegisterPage() {
                                     type="tel"
                                     id="phone"
                                     name="phone"
-                                    placeholder="+254 7XX XXX XXX"
+                                    placeholder="+254712345678"
                                     value={formData.phone}
                                     onChange={handleChange}
+                                    maxLength={20}
                                     required
                                 />
                             </div>

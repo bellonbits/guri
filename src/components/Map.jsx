@@ -1,38 +1,27 @@
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
+import React from 'react';
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import './Map.css';
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-import L from 'leaflet';
 
-// Fix for default marker icon not showing
-let DefaultIcon = L.icon({
-    iconUrl: icon,
-    shadowUrl: iconShadow,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41]
-});
+const containerStyle = {
+    width: '100%',
+    height: '400px'
+};
 
-L.Marker.prototype.options.icon = DefaultIcon;
-
-function Map({ lat, lng, zoom = 13, popupText, height = "400px", className = "" }) {
-    const position = [lat, lng];
+const Map = ({ center, zoom = 15 }) => {
+    // Use a fallback center if none provided (Nairobi)
+    const mapCenter = center || { lat: -1.2921, lng: 36.8219 };
 
     return (
-        <div className={`map-wrapper ${className}`} style={{ height }}>
-            <MapContainer center={position} zoom={zoom} scrollWheelZoom={false} style={{ height: '100%', width: '100%' }}>
-                <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                <Marker position={position}>
-                    <Popup>
-                        {popupText}
-                    </Popup>
-                </Marker>
-            </MapContainer>
-        </div>
+        <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+            <GoogleMap
+                mapContainerStyle={containerStyle}
+                center={mapCenter}
+                zoom={zoom}
+            >
+                <Marker position={mapCenter} />
+            </GoogleMap>
+        </LoadScript>
     );
-}
+};
 
-export default Map;
+export default React.memo(Map);

@@ -21,7 +21,20 @@ function StaysPage() {
                     purpose: 'stay',
                     page_size: 100
                 });
-                const transformed = response.properties.map(transformProperty);
+
+                // Robust extraction of the array
+                let propertiesList = [];
+                if (Array.isArray(response)) {
+                    propertiesList = response;
+                } else if (response?.items?.properties && Array.isArray(response.items.properties)) {
+                    propertiesList = response.items.properties;
+                } else if (response && Array.isArray(response.items)) {
+                    propertiesList = response.items;
+                } else if (response && Array.isArray(response.properties)) {
+                    propertiesList = response.properties;
+                }
+
+                const transformed = propertiesList.map(transformProperty);
                 setProperties(transformed);
             } catch (error) {
                 console.error('Failed to fetch stays:', error);

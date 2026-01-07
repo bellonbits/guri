@@ -41,6 +41,7 @@ class Settings(BaseSettings):
     EMAIL_FROM_NAME: str
     EMAILS_ENABLED: bool = True
     EMAIL_VERIFICATION_EXPIRE_HOURS: int = 24
+    RESEND_API_KEY: str = "re_gs1mGZ2G_47yAXVNbVBaWvuXwRgcqwgen"
     
     # Security
     RATE_LIMIT_PER_MINUTE: int = 60
@@ -58,6 +59,10 @@ class Settings(BaseSettings):
     UPLOAD_DIR: str = "./uploads"
 
     # MinIO / S3 Storage
+
+    @property
+    def cookie_samesite_lower(self) -> str:
+        return self.COOKIE_SAMESITE.lower()
     S3_ENDPOINT: str = "http://localhost:9000"
     S3_ACCESS_KEY: str = "minioadmin"
     S3_SECRET_KEY: str = "minioadmin"

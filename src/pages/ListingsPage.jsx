@@ -39,7 +39,20 @@ function ListingsPage({ purpose = 'all', title = 'All Listings', subtitle = 'Bro
                 }
 
                 const response = await propertyApi.getProperties(params);
-                const transformed = response.properties.map(transformProperty);
+
+                // Robust extraction of the array
+                let propertiesList = [];
+                if (Array.isArray(response)) {
+                    propertiesList = response;
+                } else if (response?.items?.properties && Array.isArray(response.items.properties)) {
+                    propertiesList = response.items.properties;
+                } else if (response && Array.isArray(response.items)) {
+                    propertiesList = response.items;
+                } else if (response && Array.isArray(response.properties)) {
+                    propertiesList = response.properties;
+                }
+
+                const transformed = propertiesList.map(transformProperty);
                 setProperties(transformed);
             } catch (error) {
                 console.error('Failed to fetch properties:', error);
